@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <body>
+    <h2>Title Search</h2>
+    <input type = "text" id = "input" value = "Title">
+    <button type = "button" onclick = "loadDoc()">Enter</button>
+    <br/><br/>
+    <div id = "demo"></div>
+  </body>
+  <script>
+    function loadDoc()
+    {
+        var title = document.getElementById("input").value;
+        var imdbTitle = title.split(' ').join('+');
+        $.get( "http://www.google.com/", function( data ) {
+            console.log(data);
+            });
+        document.getElementById("demo").innerHTML = title + "<br/>" + imdbTitle + "<br/>";
+    }
+  </script>
+</html>
