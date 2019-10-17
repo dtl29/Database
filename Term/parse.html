@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!using jquery>
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <body>
     <h2>Title Search</h2>
-    <input type = "text" id = "input" value = "Title">
+    <input type = "text" id = "input" value = "XMen">
     <button type = "button" onclick = "loadDoc()">Enter</button>
     <br/><br/>
     <div id = "demo"></div>
@@ -13,10 +14,22 @@
     {
         var title = document.getElementById("input").value;
         var imdbTitle = title.split(' ').join('+');
-        $.get( "http://www.google.com/", function( data ) {
+        $.get( "https://www.imdb.com/find?ref_=nv_sr_fn&q=" + imdbTitle + "&s=all", function( data )
+        {
             console.log(data);
-            });
+        });
         document.getElementById("demo").innerHTML = title + "<br/>" + imdbTitle + "<br/>";
+
+        var href;
+        $(data).ready(function()
+        {
+          $("a").click(function(event)
+          {
+            href = $('a').attr('href');
+            alert(href);
+          });
+        });
+        document.getElementById("demo").innerHTML += "tr " + href;
     }
   </script>
 </html>
