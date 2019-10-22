@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <!using jquery>
 <!https://github.com/selmadelgado/imdb-scraper/blob/master/scraper.js>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!https://www.crummy.com/software/BeautifulSoup/bs4/doc/>
+<script src="/imdb-scraper-master/scraper.js"></script>
   <body>
     <h2>Title Search</h2>
     <input type = "text" id = "input" value = "XMen">
-    <button type = "button" onclick = "loadDoc()">Enter</button>
+    <button type = "button" onclick = "searchMovies(input)">Enter</button>
     <br/><br/>
     <div id = "demo"></div>
   </body>
-  <script>
-    function loadDoc()
-    {
-        var title = document.getElementById("input").value;
-        var imdbTitle = title.split(' ').join('+');
-        $.get( "https://www.imdb.com/find?ref_=nv_sr_fn&q=" + imdbTitle + "&s=all", function( data )
-        {
-            console.log(data);
-        });
-        document.getElementById("demo").innerHTML = title + "<br/>" + imdbTitle + "<br/>";
-
-        var href;
-        $(data).ready(function()
-        {
-          $("a").click(function(event)
-          {
-            href = $('a').attr('href');
-            alert(href);
-          });
-        });
-        document.getElementById("demo").innerHTML += "tr " + href;
-    }
-  </script>
+<script>
+   function loadDoc()
+   {
+       var title = document.getElementById("input").value;
+       var imdbTitle = title.split(' ').join('+');
+       $.get( "https://www.imdb.com/find?ref_=nv_sr_fn&q=" + imdbTitle + "&s=all", function( data )
+       {
+           console.log(data);
+       });
+       document.getElementById("demo").innerHTML = title + "<br/>" + imdbTitle + "<br/>";
+       var href;
+       $(data).ready(function()
+       {
+         $("a").click(function(event)
+         {
+           href = $('a').attr('href');
+           alert(href);
+         });
+       });
+       document.getElementById("demo").innerHTML += "tr " + href;
+   }
+ </script>
 </html>
