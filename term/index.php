@@ -16,6 +16,7 @@
 	$password = $_POST["password"];
 	$usernameLogin = $_POST["usernameLogin"];
 	$passwordLogin = $_POST["passwordLogin"];
+	$usernameDelete = $_POST["usernameDelete"];
 	if($submitType == "Sign Up")
 	{
 		//login to db 
@@ -83,6 +84,31 @@
 			$db->close();
 			echo "Failed to log in";
 			header("Location:./index.html");
+		}
+		echo '<input type="hidden" name="loggedinUser" value="'.$usernameLogin.'">';
+
+	}
+	if($submitType == "Delete User")
+	{
+		$db = new mysqli("db1.cs.uakron.edu:3306", "dtl29", "Pah8quei", "ISP_dtl29");		
+		if ($db->connect_error) {
+			print "Error - Could not connect to MySQL";
+			exit;
+		}
+		$stmt = $db->prepare("DELETE FROM Users WHERE Username = ? ");
+		$stmt->bind_param("s",$usernameDelete);
+		if($stmt->execute() && $usernameDelete != "")
+		{
+			$stmt->close();
+			$db->close();
+			header("Location:./index.html");
+		}
+		else
+		{
+			$stmt->close();
+			$db->close();
+			echo "did not delete";
+			//header("Location:./index.html");
 		}
 		echo '<input type="hidden" name="loggedinUser" value="'.$usernameLogin.'">';
 
