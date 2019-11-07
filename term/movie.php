@@ -12,7 +12,16 @@
 <body>
 
 <?php
-    
+    session_start();
+	if($_SESSION['bool'] == true)
+	{
+		$username = $_SESSION['username'];
+		echo 'Hello ' . $username;
+	}
+	else
+	{
+		echo'You are not logged in';
+	}
 	// Get input data
     $id = $_POST["movieID"];
 	$title = $_POST["movieTL"];
