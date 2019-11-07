@@ -40,6 +40,8 @@ function movieSelected(id) {
 function getMovie() {
     let movieId = sessionStorage.getItem('movieId');
     // Make a request for a user with a given ID
+    //add credit to get the credits of the movie 
+    //"https://api.themoviedb.org/3/movie/"+movieId+"/credits?api_key=98325a9d3ed3ec225e41ccc4d360c817"
     axios.get("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=98325a9d3ed3ec225e41ccc4d360c817")
         .then(function (response) {
             let movie = response.data;
@@ -69,6 +71,7 @@ function getMovie() {
             <a href="index.php" class="btn btn-default">Go Back To Search</a>
             <form action="./movie.php" method="post">
             <input type="submit" name="submit" value="Like" style="float:left">
+            <input type="submit" name="submit" value="Do Not Suggest" style="float:right">
             <input type="hidden" name="movieID" value="${movie.id}">
             <input type="hidden" name="movieTL" value="${movie.title}">
             <input type="hidden" name="movieGN" value="${movie.genres[0].name}">
