@@ -69,12 +69,19 @@ function getMovie() {
                 }
             }
 
-    });
-
+        });
    axios.get("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=98325a9d3ed3ec225e41ccc4d360c817")
         .then(function (response) {
             let movie = response.data;
             console.log(movie);
+            var i;
+            var stringToAdd = ' ';
+            for (i = 0; i < length; i++) {
+                stringToAdd = stringToAdd.concat('<input type="hidden" name="actors[');
+                stringToAdd = stringToAdd.concat(']" value="');
+                stringToAdd = stringToAdd.concat(name[i]);
+                stringToAdd = stringToAdd.concat('">');
+            }
             let output = `
         <div class="row">
           <div class="col-md-4">
@@ -111,6 +118,7 @@ function getMovie() {
             <input type="hidden" name="director" value="`+ director + `">
             <input type="hidden" name="composer" value="`+ musicComposer +`">
             <input type="hidden" name="numberOfActors" value="`+ length + `">
+            `+ stringToAdd +`
             </form>
           </div>
         </div>

@@ -1,4 +1,4 @@
-<!-- db-starter.php
+ <!-- db-starter.php
      A PHP script to demonstrate database programming.
 -->
 <html>
@@ -33,7 +33,7 @@
 	$runTime = $_POST["movieRT"];
 	$productionCompany = $_POST["moviePC"];
 	$director = $_POST["director"];
-   
+	$actorArray = $_POST["actors"];
     
     // If any of numerical values are blank, set them to zero
     if ($id == "") $id = 0;
@@ -99,9 +99,55 @@
 			{
 				$stmt->close();
 			}
+			for($i=0; $i < sizeof($actorArray); $i++)
+			{
+				$stmt = $db->prepare("INSERT INTO Actors(Name, Title) VALUES(?,?)");
+				$stmt->bind_param("ss",$actorArray[$i], $title);
+				if($stmt->execute() && $title != "")
+				{
+					echo'The actor was placed <br/>';
+					$stmt->close();
+				
+				}
+				else
+				{
+					echo'failed to place actor <br/>';
+					$stmt->close();
+				}
+			}
+
+			$_username = mysqli_real_escape_string($db, $username);
+			echo $_username;
+			$stmt = $db->prepare('INSERT INTO Liked'.$_username.'(titles) VALUES(?)');
+			$stmt->bind_param("s",$title);
+			if($stmt->execute() && $title != "")
+			{
+				echo 'Added to likes just fine';
+				$stmt->close();
+			}
+			else
+			{
+				echo'Did not add to likes';
+				$stmt->close();
+			}
 		}
 		else
 		{
+			$_username = mysqli_real_escape_string($db, $username);
+			echo $_username;
+			$stmt = $db->prepare('INSERT INTO Liked'.$_username.'(titles) VALUES(?)');
+			$stmt->bind_param("s",$title);
+			if($stmt->execute() && $title != "")
+			{
+				echo 'Added to likes just fine';
+				$stmt->close();
+			}
+			else
+			{
+				echo'Did not add to likes';
+				$stmt->close();
+			}
+
 			$nu = 1 + (int)$nu;
 			echo "ti was NOT null".$nu."!";
 			$stmt = $db->prepare("UPDATE Movies SET NumberOfLikes = ? WHERE Title = ?");
@@ -109,14 +155,11 @@
 			if($ti != "" && $stmt->execute())
 			{
 				$stmt->close();
-				$db->close();
-				header("Location:./index.php");
-			}
+				$db->close();			}
 			else
 			{
 				$stmt->close();
 				$db->close();
-				header("Location:./index.php");
 			}
 		}
 		$db->close();

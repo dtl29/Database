@@ -29,7 +29,7 @@
 	{
 		echo 'Hello ' . $usernameLogin2;
 	}
-	if($loginBool == "" || $loginBool == "false")
+	else if($loginBool == "" || $loginBool == "false")
 	{
 		setcookie($loginBoolName, $false, time() + (86400 * 30), "/");
 	}
@@ -46,7 +46,11 @@
 		$result = $db->query($query);
 		$row = $result->fetch_row();
 		$id = (int)$row[0] +1;
+		if($username == "")
+		{
+			header("Location:./index.html");
 
+		}
 		//print $value;
 		$stmt = $db->prepare("INSERT INTO Users(Id,Username,Password) VALUES(?,?,?)");
 		$stmt->bind_param("iss",$id,$username,$password);
@@ -61,24 +65,12 @@
 			echo "New records Failed to Create";
 			header("Location:./index.html");
 		}
-		//need to cahnge this! so the username is apart of the string 
-		/*
-		$stmt = $db->prepare("CREATE TABLE Liked"+$username+" (titles varchar(500));");
-		$stmt->bind_param();
-		if($stmt->execute())
-		{
-			$stmt->close();
-			$db->close();
-			echo "New records created successfully";
-		}
-		else
-		{
-			$stmt->close();
-			$db->close();
-			echo "New records Failed to Create";
-			header("Location:./index.html");
-		}	
-		*/
+
+		$_usernameSql = mysqli_real_escape_string($db, $username);
+		$query2 = 'CREATE TABLE Liked'.$_usernameSql.' (titles VARCHAR(500) PRIMARY KEY )';
+		$db->query($query2);
+		echo $db->error;
+		$db->close();
 	}
 	if($submitType == "Login")
 	{
@@ -119,6 +111,7 @@
 			setcookie($loginBoolName, $false, time()+ (86400 * 30), "/");
 			header("Location:./index.html");
 		}
+		$db->close();
 	}
 	if($submitType == "Delete User")
 	{
@@ -169,14 +162,122 @@
 			echo "did not delete3";
 			header("Location:./index.html");
 		}
+		$db->close();
 	}
-        if ($submitType == "Add Info") {
+    if ($submitType == "Add Info") 
+	{
 		$movie = $_POST["FavoriteMovie"];
 		$actor = $_POST["FavoriteActor"];
 		$director = $_POST["FavoriteDirector"];
 		$composer = $_POST["FavoriteComposer"];
 		$genre = $_POST["FavoriteGenre"];
+                $title = "title";
+		
+		$db = new mysqli("db1.cs.uakron.edu:3306", "dtl29", "Pah8quei", "ISP_dtl29");		
+		if ($db->connect_error) 
+		{
+			print "Error - Could not connect to MySQL";
+			exit;
+		}
+
+		$stmt = $db->prepare("SELECT Title FROM Movies WHERE Title = ?");
+		$stmt->bind_param("s", $movie);
+		if($stmt->execute() && $movie != "")
+		{
+			$stmt->bind_result($ti);
+			$stmt->fetch();
+                        if ($ti != "")
+			{
+				echo "<br />Already have movie in database. Added favorite movie";
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			$stmt->close();
+		}
+
+		if ($ti == "") 
+		{
+			$stmt = $db->prepare("INSERT INTO Movies(Title)VALUES(?)");
+			$stmt->bind_param("s", $movie);
+			if($stmt->execute() && $movie != "")
+			{
+				echo "<br />New movie added! Added favorite movie";
+				$stmt->close();	
+			}
+			else
+			{
+				$stmt->close();
+			}
+		}
+
+		$stmt = $db->prepare("SELECT Name FROM Actors WHERE Name = ?");
+		$stmt->bind_param("s", $actor);
+		if($stmt->execute() && $actor != "")
+		{
+			$stmt->bind_result($na);
+			$stmt->fetch();
+                        if ($na != "")
+			{
+				echo "<br />Already have actor in database. Added favorite actor";
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			$stmt->close();
+		}
+
+		if ($na == "") 
+		{
+			$stmt = $db->prepare("INSERT INTO Actors(Name, Title)VALUES(?,?)");
+			$stmt->bind_param("ss", $actor, $title);
+			if($stmt->execute() && $actor != "")
+			{
+				echo "<br />New actor added! Added favorite actor";
+				$stmt->close();	
+			}
+			else
+			{
+				$stmt->close();
+			}
+		}
+
+		$stmt = $db->prepare("SELECT Name FROM Directors WHERE Name = ?");
+		$stmt->bind_param("s", $director);
+		if($stmt->execute() && $director!= "")
+		{
+			$stmt->bind_result($np);
+			$stmt->fetch();
+                        if ($na != "")
+			{
+				echo "<br />Already have director in database. Added favorite director";
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			$stmt->close();
+		}
+
+		if ($np == "") 
+		{
+			$stmt = $db->prepare("INSERT INTO director(Name, Title)VALUES(?,?)");
+			$stmt->bind_param("ss", $director, $title);
+			if($stmt->execute() && $director!= "")
+			{
+				echo "<br />New director added! Added favorite director";
+				$stmt->close();	
+			}
+			else
+			{
+				$stmt->close();
+			}
+		}
+		$db->close();
 	}
+
 	
 ?>
 
@@ -197,6 +298,28 @@
 </div>
 <div class="container">
 <div id="movies" class="row"></div>
+</div>
+<div id="sugestions">
+	Some Suggestions For You Are: 
+	<?php 
+		//need to have a query for suggestions 
+		/*
+		$db = new mysqli("db1.cs.uakron.edu:3306", "dtl29", "Pah8quei", "ISP_dtl29");		
+		if ($db->connect_error) 
+		{
+			print "Error - Could not connect to MySQL";
+			exit;
+		}
+		$_username = mysqli_real_escape_string($db, $usernameLogin2);
+		$stmt = $db->prepare('SELECT Title FROM Liked'.$_username);
+		$stmt->bind_param();
+		if($stmt->execute())
+		{
+			$stmt->bind_result($ti);
+			$stmt->fetch();
+			$stmt->close();
+		}*/
+	?><br/>
 </div>
 <form action="index.php" method="post">
     <div style="float : left; margin-left : 20%;">
@@ -221,6 +344,7 @@
         <input type="submit" name="submit" value="Add Info" />
     </div>
 </form>
+
 
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
