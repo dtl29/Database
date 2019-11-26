@@ -38,11 +38,40 @@ function movieSelected(id) {
 }
 
 function getMovie() {
+    var name = [];
+    var character = [];
+    var director;
+    var musicComposer;
+    var length;
     let movieId = sessionStorage.getItem('movieId');
     // Make a request for a user with a given ID
     //add credit to get the credits of the movie 
     //"https://api.themoviedb.org/3/movie/"+movieId+"/credits?api_key=98325a9d3ed3ec225e41ccc4d360c817"
-    axios.get("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=98325a9d3ed3ec225e41ccc4d360c817")
+    axios.get("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=98325a9d3ed3ec225e41ccc4d360c817")
+        .then(function (response) {
+            let credits = response.data;
+            console.log(credits);
+            length = credits.cast.length; 
+            for (var i = 0; i < credits.cast.length; i++)
+            {
+                name.push(credits.cast[i].name);
+                character.push(credits.cast[i].character);
+            }
+            for (var i = 0; i < credits.crew.length; i++)
+            {
+                if (credits.crew[i].job == "Director") 
+                {
+                    director = credits.crew[i].name;
+                }
+                if (credits.crew[i].job == "Original Music Composer")
+                {
+                    musicComposer = credits.crew[i].name;
+                }
+            }
+
+    });
+
+   axios.get("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=98325a9d3ed3ec225e41ccc4d360c817")
         .then(function (response) {
             let movie = response.data;
             console.log(movie);
@@ -65,7 +94,7 @@ function getMovie() {
         <div class="row">
           <div class="well">
             <h3>Plot</h3>
-            ${movie.overview}
+
             <hr>
             <a href="http://imdb.com/title/${movie.imdb_id}" target="_blank" class="btn btn-primary">View IMDB</a>
             <a href="index.php" class="btn btn-default">Go Back To Search</a>
@@ -79,6 +108,9 @@ function getMovie() {
             <input type="hidden" name="movieVA" value="${movie.vote_average}">
             <input type="hidden" name="movieRT" value="${movie.runtime}">
             <input type="hidden" name="moviePC" value="${movie.production_companies[0].name}">
+            <input type="hidden" name="director" value="`+ director + `">
+            <input type="hidden" name="composer" value="`+ musicComposer +`">
+            <input type="hidden" name="numberOfActors" value="`+ length + `">
             </form>
           </div>
         </div>

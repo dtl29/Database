@@ -53,21 +53,6 @@
 		if($stmt->execute())
 		{
 			$stmt->close();
-			echo "New records created successfully";
-		}
-		else
-		{
-			$stmt->close();
-			echo "New records Failed to Create";
-			header("Location:./index.html");
-		}
-		//need to cahnge this! so the username is apart of the string 
-		/*
-		$stmt = $db->prepare("CREATE TABLE Liked"+$username+" (titles varchar(500));");
-		$stmt->bind_param();
-		if($stmt->execute())
-		{
-			$stmt->close();
 			$db->close();
 			echo "New records created successfully";
 		}
@@ -77,8 +62,7 @@
 			$db->close();
 			echo "New records Failed to Create";
 			header("Location:./index.html");
-		}	
-		*/
+		}		
 	}
 	if($submitType == "Login")
 	{
@@ -170,13 +154,6 @@
 			header("Location:./index.html");
 		}
 	}
-        if ($submitType == "Add Info") {
-		$movie = $_POST["FavoriteMovie"];
-		$actor = $_POST["FavoriteActor"];
-		$director = $_POST["FavoriteDirector"];
-		$composer = $_POST["FavoriteComposer"];
-		$genre = $_POST["FavoriteGenre"];
-	}
 	
 ?>
 
@@ -198,30 +175,27 @@
 <div class="container">
 <div id="movies" class="row"></div>
 </div>
-<form action="index.php" method="post">
-    <div style="float : left; margin-left : 20%;">
-        <p>Favorite Movie</p>
-        <input type="text" name="FavoriteMovie" /><br /><br />
-    </div>
-    <div style="float : left; margin-left : 20%;">
-        <p>Favorite Actor</p>
-        <input type="text" name="FavoriteActor" /><br /><br />
-    </div>
-    <div style="float : left; margin-left : 20%;">
-        <p>Favorite Director</p>
-        <input type="text" name="FavoriteDirector" /><br /><br />
-    </div>
-    <div style="float : left; margin-left : 30%;">
-        <p>Favorite Composer</p>
-        <input type="text" name="FavoriteComposer" /><br /><br />
-    </div>
-    <div style="float : left; margin-left : 20%;">
-        <p>Favorite Genre</p>
-        <input type="text" name="FavoriteGenre" /><br /><br />
-        <input type="submit" name="submit" value="Add Info" />
-    </div>
-</form>
-
+<div style="float : left; margin-left : 20%;">
+    <p>FavoriteMovie</p>
+    <input type="text" name="Favorite Movie" /><br /><br />
+    <input type="submit" name="submit" value="Add Info" />
+</div>
+<div style="float : left; margin-left : 20%;">
+    <p>FavoriteActor</p>
+    <input type="text" name="Favorite Actor" /><br /><br />
+    <input type="submit" name="submit" value="Add Info" />
+</div>
+<div style="float : left; margin-left : 20%;">
+    <p>FavoriteDirector</p>
+    <input type="text" name="Favorite Director" /><br /><br />
+    <input type="submit" name="submit" value="Add Info" />
+</div>
+<br />
+<div style="float : left; margin-left : 20%;">
+    <p>FavoriteComposer</p>
+    <input type="text" name="Favorite Composer" /><br /><br />
+    <input type="submit" name="submit" value="Add Info" />
+</div>
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script type="text/javascript" src="js/Y8jX7FH_5H.js"></script>
