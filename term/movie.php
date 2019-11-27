@@ -39,7 +39,7 @@
     if ($id == "") $id = 0;
 	if($title == "") $title = "null";
 	if($genre == "") $genre = "null";
-	if($releaseDate == "") $releaseDate = "null";
+  	if($releaseDate == "") $releaseDate = "null";
 	if($voteAverage == "") $voteAverage = "null";
 	if($runTime == "") $runTime = "null";
 	if($productionCompany == "") $productionCompany = "null";
@@ -58,10 +58,10 @@
 			$stmt->fetch();
 			$stmt->close();
 		}
-		echo "the title is: " .  $ti . "and the number of likes are: " . $nu . "!";
+		echo " the title is: " .  $ti . " and the number of likes are: " . $nu . "!";
 		if($ti == "")
 		{
-			echo "ti was null";
+			echo " ti was null ";
 			$nu = 1;
 			$releaseDate = substr($releaseDate,0,-6);
 			$ye = (int)$releaseDate;
@@ -70,7 +70,6 @@
 			if($stmt->execute() && $title != "")
 			{
 				$stmt->close();
-				
 			}
 			else
 			{
@@ -82,8 +81,7 @@
 			$stmt->bind_param("sisi", $title, $ye, $director, $nu);
 			if($stmt->execute() && $title != "")
 			{
-				$stmt->close();
-				
+				$stmt->close();	
 			}
 			else
 			{
@@ -139,12 +137,12 @@
 			$stmt->bind_param("s",$title);
 			if($stmt->execute() && $title != "")
 			{
-				echo 'Added to likes just fine';
+				echo '<br />Added to likes just fine';
 				$stmt->close();
 			}
 			else
 			{
-				echo'Did not add to likes';
+				echo'<br />Did not add to likes';
 				$stmt->close();
 			}
 
@@ -155,7 +153,8 @@
 			if($ti != "" && $stmt->execute())
 			{
 				$stmt->close();
-				$db->close();			}
+				$db->close();			
+			}
 			else
 			{
 				$stmt->close();

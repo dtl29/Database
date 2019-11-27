@@ -188,7 +188,7 @@
 			$stmt->fetch();
                         if ($ti != "")
 			{
-				echo "<br />Already have movie in database. Added favorite movie";
+				echo "<br />Already have movie in database. Added as your favorite movie";
 			}
 			$stmt->close();	
 		}
@@ -203,7 +203,7 @@
 			$stmt->bind_param("s", $movie);
 			if($stmt->execute() && $movie != "")
 			{
-				echo "<br />New movie added! Added favorite movie";
+				echo "<br />New movie added! Added as your favorite movie";
 				$stmt->close();	
 			}
 			else
@@ -220,7 +220,7 @@
 			$stmt->fetch();
                         if ($na != "")
 			{
-				echo "<br />Already have actor in database. Added favorite actor";
+				echo "<br />Already have actor in database. Added as your favorite actor";
 			}
 			$stmt->close();	
 		}
@@ -235,7 +235,7 @@
 			$stmt->bind_param("ss", $actor, $title);
 			if($stmt->execute() && $actor != "")
 			{
-				echo "<br />New actor added! Added favorite actor";
+				echo "<br />New actor added! Added as your favorite actor";
 				$stmt->close();	
 			}
 			else
@@ -250,9 +250,9 @@
 		{
 			$stmt->bind_result($np);
 			$stmt->fetch();
-                        if ($na != "")
+                        if ($np != "")
 			{
-				echo "<br />Already have director in database. Added favorite director";
+				echo "<br />Already have director in database. Added as your favorite director";
 			}
 			$stmt->close();	
 		}
@@ -263,11 +263,11 @@
 
 		if ($np == "") 
 		{
-			$stmt = $db->prepare("INSERT INTO director(Name, Title)VALUES(?,?)");
+			$stmt = $db->prepare("INSERT INTO Directors(Name, Title)VALUES(?,?)");
 			$stmt->bind_param("ss", $director, $title);
 			if($stmt->execute() && $director!= "")
 			{
-				echo "<br />New director added! Added favorite director";
+				echo "<br />New director added! Added as your favorite director";
 				$stmt->close();	
 			}
 			else
@@ -275,6 +275,96 @@
 				$stmt->close();
 			}
 		}
+
+		$stmt = $db->prepare("SELECT Name FROM Composers WHERE Name = ?");
+		$stmt->bind_param("s", $composer);
+		if($stmt->execute() && $composer!= "")
+		{
+			$stmt->bind_result($nc);
+			$stmt->fetch();
+                        if ($nc != "")
+			{
+				echo "<br />Already have composer in database. Added as your favorite composer";
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			$stmt->close();
+		}
+
+		if ($nc == "") 
+		{
+			$stmt = $db->prepare("INSERT INTO Composers(Name, Title)VALUES(?,?)");
+			$stmt->bind_param("ss", $composer, $title);
+			if($stmt->execute() && $composer!= "")
+			{
+				echo "<br />New composer added! Added as your favorite composer";
+				$stmt->close();	
+			}
+			else
+			{
+				$stmt->close();
+			}
+		}
+
+		$stmt = $db->prepare("SELECT Genre FROM Genres WHERE Genre = ?");
+		$stmt->bind_param("s", $genre);
+		if($stmt->execute() && $genre!= "")
+		{
+			$stmt->bind_result($gr);
+			$stmt->fetch();
+                        if ($gr != "")
+			{
+				echo "<br />Already have genre in database. Added as your favorite genre";
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			$stmt->close();
+		}
+
+		if ($gr == "") 
+		{
+			$stmt = $db->prepare("INSERT INTO Genres(Title, Genre)VALUES(?,?)");
+			$stmt->bind_param("ss", $genre, $genre);
+			if($stmt->execute() && $genre!= "")
+			{
+				echo "<br />New genre added! Added as your favorite genre";
+				$stmt->close();	
+			}
+			else
+			{
+				$stmt->close();
+			}
+		}
+
+		$theusername = mysqli_real_escape_string($db, $usernameLogin2);
+		//echo $theusername;
+
+		$sql = 'CREATE TABLE Favorites'.$theusername.'(
+			Movie VARCHAR(500) PRIMARY KEY,
+            Actor VARCHAR(50),
+			Director VARCHAR(50),
+			Composer VARCHAR(50),
+			Genre VARCHAR(20)
+		)';
+		$db->query($sql);
+
+		$stmt = $db->prepare('INSERT INTO Favorites'.$theusername.'(Movie, Actor, Director, Composer, Genre) VALUES(?, ?, ?, ?, ?)');
+		$stmt->bind_param("sssss",$movie, $actor, $director, $composer, $genre);
+		if($stmt->execute() && $movie != "")
+		{
+			echo 'Added to Favorites';
+			$stmt->close();
+		}
+		else
+		{
+			echo'Did Not Add to Favorites';
+			$stmt->close();
+		}
+
 		$db->close();
 	}
 
@@ -302,6 +392,11 @@
 <div id="sugestions">
 	Some Suggestions For You Are: 
 	<?php 
+		$searchtitle = $_POST["movieTL"];
+		$searchgenre = $_POST["movieGN"];
+		$searchdirector = $_POST["director"];
+		$searchactorArray = $_POST["actors"];
+
 		//need to have a query for suggestions 
 		/*
 		$db = new mysqli("db1.cs.uakron.edu:3306", "dtl29", "Pah8quei", "ISP_dtl29");		
@@ -311,15 +406,25 @@
 			exit;
 		}
 		$_username = mysqli_real_escape_string($db, $usernameLogin2);
-		$stmt = $db->prepare('SELECT Title FROM Liked'.$_username);
+		$stmt = $db->prepare('(SELECT Liked'.$_username.'.titles, Actors.Name, Genres.Genre  FROM Liked'.$_username.' JOIN Genres ON Liked'.$_username.'.titles = Genres.title JOIN Actors ON Liked'.$_username.'.titles = Actors.Title)');
 		$stmt->bind_param();
 		if($stmt->execute())
 		{
-			$stmt->bind_result($ti);
+			$stmt->bind_result($);
 			$stmt->fetch();
+                        if ($return != "")
+			{
+				echo $return;
+			}
+			$stmt->close();	
+		}
+		else
+		{
+			echo "did not find any sugestions";
 			$stmt->close();
-		}*/
-	?><br/>
+		}
+		*/
+		?><br/>
 </div>
 <form action="index.php" method="post">
     <div style="float : left; margin-left : 20%;">
