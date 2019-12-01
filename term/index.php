@@ -398,7 +398,6 @@
 		$searchactorArray = $_POST["actors"];
 
 		//need to have a query for suggestions 
-		/*
 		$db = new mysqli("db1.cs.uakron.edu:3306", "dtl29", "Pah8quei", "ISP_dtl29");		
 		if ($db->connect_error) 
 		{
@@ -406,7 +405,7 @@
 			exit;
 		}
 		$_username = mysqli_real_escape_string($db, $usernameLogin2);
-		$stmt = $db->prepare('(SELECT Liked'.$_username.'.titles, Actors.Name, Genres.Genre  FROM Liked'.$_username.' JOIN Genres ON Liked'.$_username.'.titles = Genres.title JOIN Actors ON Liked'.$_username.'.titles = Actors.Title)');
+		$stmt = $db->prepare('SELECT DISTINCT titles FROM (SELECT * FROM Liked'.$_username.' JOIN (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G)AS J ON Liked'.$_username.'.titles = J.Title )AS K JOIN (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G) AS O ON K.Title != O.Title GROUP BY K.NumberOfLikes ORDER BY COUNT(*) ASC;');
 		$stmt->bind_param();
 		if($stmt->execute())
 		{
@@ -423,7 +422,6 @@
 			echo "did not find any sugestions";
 			$stmt->close();
 		}
-		*/
 		?><br/>
 </div>
 <form action="index.php" method="post">
