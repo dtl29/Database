@@ -389,8 +389,8 @@
 <div class="container">
 <div id="movies" class="row"></div>
 </div>
-<div id="sugestions">
-	Some Suggestions For You Are: 
+<div id="sugestions" style="margin-left: 40px;">
+	Some Suggestions For You Are:
 	<?php 
 		$searchtitle = $_POST["movieTL"];
 		$searchgenre = $_POST["movieGN"];
@@ -405,21 +405,31 @@
 			exit;
 		}
 		$_username = mysqli_real_escape_string($db, $usernameLogin2);
-		$stmt = $db->prepare('SELECT DISTINCT titles FROM (SELECT * FROM Liked'.$_username.' JOIN (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G)AS J ON Liked'.$_username.'.titles = J.Title )AS K JOIN (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G) AS O ON K.Title != O.Title GROUP BY K.NumberOfLikes ORDER BY COUNT(*) ASC;');
+		
+		//$stmt = $db->prepare('(SELECT Liked'.$_username.'.titles, Actors.Name, Genres.Genre  FROM Liked'.$_username.' JOIN Genres ON Liked'.$_username.'.titles = Genres.title JOIN Actors ON Liked'.$_username.'.titles = Actors.Title)');
+		$stmt = $db->prepare('SELECT DISTINCT Title FROM (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G) AS O UNION SELECT Title FROM (SELECT * FROM Liked'.$_username.' JOIN (SELECT *  FROM Movies JOIN (SELECT Genre FROM Genres)AS G)AS J ON Liked'.$_username.'.titles = J.Title )AS K;');		
 		$stmt->bind_param();
 		if($stmt->execute())
 		{
-			$stmt->bind_result($);
+			
+			$stmt->bind_result($return);
 			$stmt->fetch();
-                        if ($return != "")
+			$stmt->fetch();
+            if ($return != "")
 			{
-				echo $return;
+				echo '<br>';
+				for($i = 0; $i < 10; $i++)
+				{
+					echo $return.', ';
+					$stmt->fetch();
+				}
 			}
 			$stmt->close();	
+			
 		}
 		else
 		{
-			echo "did not find any sugestions";
+			echo "<br/>did not find any sugestions";
 			$stmt->close();
 		}
 		?><br/>
